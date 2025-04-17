@@ -20,7 +20,6 @@
       position: relative;
       background-color: #ffffff;
       font-size: 16px;
-      cursor: pointer; /* 화면 클릭할 수 있도록 커서 모양 변경 */
     }
 
     .left-half {
@@ -30,6 +29,7 @@
       align-items: center;
       background-color: #ffffff;
       z-index: 1;
+      flex-direction: column;  /* 이미지 아래 버튼 위치하도록 수정 */
     }
 
     .left-half img {
@@ -49,6 +49,7 @@
       font-size: 1.2rem;
       background: #ffffff;
       z-index: 1;
+      position: relative;
     }
 
     #letter {
@@ -110,6 +111,17 @@
       100% { opacity: 0.8; }
     }
 
+    .play-stop-button {
+      margin-top: 20px;  /* 이미지 바로 아래로 배치 */
+      font-size: 30px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      background-color: white;
+      z-index: 10;
+    }
+
     @media (max-width: 768px) {
       body {
         flex-direction: column;
@@ -141,11 +153,13 @@
     }
   </style>
 </head>
-<body onclick="toggleMusic()"> <!-- 화면을 클릭하면 음악 재생/중지 -->
+<body>
 
   <div class="left-half">
     <img src="https://github.com/namankum/sin/blob/main/sin.jpg?raw=true" alt="진아 사진" />
+    <button class="play-stop-button" onclick="toggleMusic()">🎵 </button>  <!-- 버튼 위치 수정 -->
   </div>
+  
   <div class="right-half">
     <div id="letter">
       <p>❤️!홍진아의 30번째 생일을 축하합니다!❤️<br>
@@ -166,23 +180,28 @@
     </div>
   </div>
 
-  <!-- 🎵 유튜브 자동재생 배경음악 -->
-  <div style="position: absolute; width: 100%; height: 100%; z-index: -1;">
-    <iframe id="player" width="100%" height="100%" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-  </div>
+  <!-- 🎵 MP3 자동재생 배경음악 -->
+  <audio id="audioPlayer" loop>
+    <source src="https://github.com/namankum/sin/raw/refs/heads/main/%EC%82%B0%EB%8B%A4%EB%8A%94%EA%B1%B4%20%EB%8B%A4%20%EA%B7%B8%EB%9F%B0%EA%B2%8C%20%EC%95%84%EB%8B%88%EA%B2%A0%EB%8B%88.mp3" type="audio/mp3">
+    브라우저가 오디오를 지원하지 않습니다.
+  </audio>
 
   <script>
-    let player;
     let isPlaying = false;
 
     function toggleMusic() {
+      const button = document.querySelector(".play-stop-button");
+      const audioPlayer = document.getElementById("audioPlayer");
+
       if (!isPlaying) {
         // 음악 재생
-        player = document.getElementById("player");
-        player.src = "https://www.youtube.com/embed/KtxakrLjyK0?autoplay=1&mute=0&modestbranding=1&showinfo=0&rel=0";
+        audioPlayer.play();
+        button.textContent = "❌ ";  // 버튼 텍스트 변경
       } else {
         // 음악 중지
-        player.src = "";
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;  // 음악 시작 위치로 돌아감
+        button.textContent = "🎵 ";  // 버튼 텍스트 변경
       }
 
       isPlaying = !isPlaying;  // 상태 변경
